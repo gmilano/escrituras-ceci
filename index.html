@@ -778,14 +778,10 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      .poems-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      .poems-grid { grid-template-columns: 1fr 1fr; }
 
-      /* Modal full-screen mobile */
-      .modal-backdrop {
-        align-items: flex-end;
-      }
+      /* ── MOBILE MODAL PARALLAX ── */
+      .modal-backdrop { align-items: flex-start; }
 
       .modal {
         flex-direction: column;
@@ -795,85 +791,134 @@
         max-height: 100dvh;
         margin: 0;
         border: none;
-        position: relative;
         overflow: hidden;
+        background: #0e0e0f;
+        position: relative;
       }
 
-      /* Image as full background */
-      .modal-image-panel {
+      /* Sticky title bar — hidden until scroll */
+      .modal-sticky-bar {
         position: absolute;
-        inset: 0;
+        top: 0; left: 0; right: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        background: rgba(14,14,15,0.88);
+        backdrop-filter: blur(12px);
+        transform: translateY(-100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+      }
+
+      .modal-sticky-bar.visible { transform: translateY(0); }
+
+      .modal-sticky-close {
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        border: none; color: #fff;
+        cursor: pointer; font-size: 0.9rem;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .modal-sticky-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 1rem;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+      }
+
+      /* Close btn (on image) — hide when sticky bar shows */
+      .modal-close {
+        position: absolute;
+        top: 1rem; right: 1rem;
+        z-index: 20;
+        background: rgba(0,0,0,0.55);
+        border-color: rgba(255,255,255,0.2);
+        color: #fff;
+        transition: opacity 0.3s;
+      }
+
+      .modal-close.hidden-by-bar { opacity: 0; pointer-events: none; }
+
+      /* Image panel — sticky at top, parallax via JS */
+      .modal-image-panel {
+        position: sticky;
+        top: 0;
+        height: 52vw;
+        min-height: 200px;
+        max-height: 300px;
         width: 100%;
-        height: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
+        z-index: 1;
       }
 
       .modal-image-panel img {
         width: 100%;
-        height: 100%;
+        height: 150%;
         object-fit: cover;
-        filter: brightness(0.35) saturate(0.8);
+        object-position: center top;
+        display: block;
+        filter: brightness(0.75) saturate(0.9);
+        transform-origin: center top;
+        will-change: transform;
       }
 
       .modal-image-panel::after {
         background: linear-gradient(
           to bottom,
-          rgba(0,0,0,0.4) 0%,
-          rgba(0,0,0,0.1) 30%,
-          rgba(0,0,0,0.6) 65%,
-          rgba(0,0,0,0.92) 100%
+          transparent 40%,
+          rgba(14,14,15,0.7) 80%,
+          rgba(14,14,15,1) 100%
         );
       }
 
-      /* Content scrolls over image */
+      /* Content — normal flow, scrolls over the sticky image */
       .modal-content {
         position: relative;
         z-index: 2;
-        width: 100%;
-        height: 100dvh;
-        padding: 5rem 1.5rem 2rem 1.5rem;
+        flex: 1;
         overflow-y: auto;
-        background: transparent;
-        display: flex;
-        flex-direction: column;
+        -webkit-overflow-scrolling: touch;
+        padding: 1.5rem 1.5rem 3rem;
+        background: #0e0e0f;
+        scrollbar-width: none;
       }
 
-      .modal-poem-number {
-        font-size: 0.7rem;
-        opacity: 0.6;
-      }
+      .modal-content::-webkit-scrollbar { display: none; }
+
+      .modal-poem-number { font-size: 0.7rem; opacity: 0.55; }
 
       .modal-poem-title {
         font-size: clamp(1.8rem, 7vw, 2.8rem);
         color: #fff;
-        border-bottom-color: rgba(255,255,255,0.15);
+        border-bottom-color: rgba(255,255,255,0.1);
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
       }
 
       .modal-poem-body {
         color: rgba(255,255,255,0.88);
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         line-height: 2.1;
-        flex: 1;
+      }
+
+      .audio-player {
+        background: rgba(255,255,255,0.05);
+        border-color: rgba(255,255,255,0.08);
       }
 
       .modal-nav button {
-        color: rgba(255,255,255,0.6);
-        border-color: rgba(255,255,255,0.15);
-      }
-
-      .modal-nav button:hover {
-        color: var(--accent);
-        border-color: var(--accent);
-      }
-
-      .modal-close {
-        top: 1rem;
-        right: 1rem;
-        z-index: 20;
-        background: rgba(0,0,0,0.5);
-        border-color: rgba(255,255,255,0.2);
-        color: #fff;
+        color: rgba(255,255,255,0.55);
+        border-color: rgba(255,255,255,0.12);
       }
     }
 
@@ -934,8 +979,13 @@
 <!-- MODAL -->
 <div class="modal-backdrop" id="modalBackdrop">
   <button class="modal-close" id="modalClose">✕</button>
+  <!-- Mobile sticky bar -->
+  <div class="modal-sticky-bar" id="modalStickyBar">
+    <button class="modal-sticky-close" id="modalStickyClose">✕</button>
+    <span class="modal-sticky-title" id="modalStickyTitle"></span>
+  </div>
   <div class="modal">
-    <div class="modal-image-panel">
+    <div class="modal-image-panel" id="modalImagePanel">
       <img id="modalImg" src="" alt="">
     </div>
     <div class="modal-content">
@@ -2106,7 +2156,12 @@ function openModal(index) {
   document.getElementById('modalBody').textContent = poem.body;
   document.getElementById('modalBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
-  document.querySelector('.modal-content').scrollTop = 0;
+  // Reset scroll + parallax + sticky
+  modalContent.scrollTop = 0;
+  modalImgEl.style.transform = 'translateY(0)';
+  modalStickyBar.classList.remove('visible');
+  modalCloseBtn.classList.remove('hidden-by-bar');
+  if (modalStickyTitle) modalStickyTitle.textContent = poem.title;
   loadAudio(poem.id);
 }
 
@@ -2115,12 +2170,40 @@ function closeModal() {
   document.getElementById('audioPlayBtn').textContent = '▶';
   document.getElementById('modalBackdrop').classList.remove('open');
   document.body.style.overflow = '';
+  if (modalStickyBar) modalStickyBar.classList.remove('visible');
+  if (modalCloseBtn) modalCloseBtn.classList.remove('hidden-by-bar');
 }
 
 document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalStickyClose').addEventListener('click', closeModal);
 document.getElementById('modalBackdrop').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modalBackdrop')) closeModal();
 });
+
+// ── MOBILE PARALLAX + STICKY BAR ──
+const modalContent = document.querySelector('.modal-content');
+const modalStickyBar = document.getElementById('modalStickyBar');
+const modalStickyTitle = document.getElementById('modalStickyTitle');
+const modalCloseBtn = document.getElementById('modalClose');
+const modalImgEl = document.getElementById('modalImg');
+const modalImagePanel = document.getElementById('modalImagePanel');
+
+function isMobile() { return window.innerWidth <= 768; }
+
+modalContent.addEventListener('scroll', () => {
+  if (!isMobile()) return;
+  const scrollY = modalContent.scrollTop;
+  const panelH = modalImagePanel.offsetHeight;
+
+  // Parallax: image moves up at 0.4x speed
+  const offset = scrollY * 0.4;
+  modalImgEl.style.transform = `translateY(${offset}px)`;
+
+  // Sticky bar: show when scrolled past image
+  const showBar = scrollY > panelH * 0.6;
+  modalStickyBar.classList.toggle('visible', showBar);
+  modalCloseBtn.classList.toggle('hidden-by-bar', showBar);
+}, { passive: true });
 
 document.getElementById('prevBtn').addEventListener('click', () => {
   openModal((currentIndex - 1 + poems.length) % poems.length);
