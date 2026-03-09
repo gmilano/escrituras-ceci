@@ -407,6 +407,278 @@
       color: var(--accent);
     }
 
+    /* ── REEL BTN in hero ── */
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-reel {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: var(--accent);
+      color: #0e0e0f;
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-reel:hover { background: #e0bc7f; transform: translateY(-1px); }
+
+    .btn-scroll {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      cursor: pointer;
+      animation: pulse 2s ease-in-out infinite;
+      padding: 0.5rem;
+    }
+
+    /* ── REEL MODE ── */
+    .reel-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .reel-overlay.open { display: flex; }
+
+    .reel-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+    }
+
+    .reel-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      backdrop-filter: blur(6px);
+      flex-shrink: 0;
+    }
+
+    .reel-counter {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .reel-title-top {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      font-style: italic;
+      text-align: center;
+      flex: 1;
+      padding: 0 0.5rem;
+    }
+
+    .reel-slides {
+      flex: 1;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .reel-slides::-webkit-scrollbar { display: none; }
+
+    .reel-slide {
+      height: 100dvh;
+      width: 100%;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .reel-bg {
+      position: absolute;
+      inset: -5%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(2px) brightness(0.45);
+      transform: scale(1.1);
+      transition: filter 0.5s;
+    }
+
+    .reel-slide.active .reel-bg {
+      filter: blur(0px) brightness(0.55);
+    }
+
+    .reel-slide-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding: 0 1.25rem 5rem 1.25rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .reel-poem-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .reel-poem-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      color: #fff;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+
+    .reel-poem-excerpt {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+      color: rgba(255,255,255,0.78);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .reel-poem-excerpt.expanded {
+      -webkit-line-clamp: unset;
+      display: block;
+    }
+
+    .reel-more-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      font-family: 'Lato', sans-serif;
+      letter-spacing: 0.15em;
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    .reel-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding-bottom: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .reel-action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      padding: 0;
+    }
+
+    .reel-action-btn .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .reel-action-btn:active .icon { transform: scale(0.9); }
+
+    .reel-action-btn.liked .icon {
+      background: rgba(220, 50, 80, 0.3);
+    }
+
+    .reel-action-btn .label {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .reel-progress {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .reel-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.2s, height 0.2s;
+    }
+
+    .reel-dot.active {
+      background: rgba(255,255,255,0.9);
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* heart beat animation */
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.35); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    .reel-action-btn.liked .icon { animation: heartbeat 0.4s ease; }
+
     /* ── FOOTER ── */
     footer {
       text-align: center;
@@ -473,7 +745,10 @@
   </h1>
   <p class="hero-subtitle">veintiún poemas</p>
   <div class="hero-divider"></div>
-  <p class="scroll-hint">↓ leer</p>
+  <div class="hero-actions">
+    <button class="btn-reel" id="openReelBtn">▶ modo reel</button>
+    <button class="btn-scroll" onclick="document.querySelector('.poems-section').scrollIntoView({behavior:'smooth'})">↓ galería</button>
+  </div>
 </section>
 
 <!-- POEMS GRID -->
@@ -484,6 +759,17 @@
   </div>
   <div class="poems-grid" id="poemsGrid"></div>
 </section>
+
+<!-- REEL MODE -->
+<div class="reel-overlay" id="reelOverlay">
+  <div class="reel-header">
+    <button class="reel-close" id="reelClose">✕</button>
+    <p class="reel-title-top" id="reelTitleTop"></p>
+    <p class="reel-counter" id="reelCounter">1 / 21</p>
+  </div>
+  <div class="reel-slides" id="reelSlides"></div>
+  <div class="reel-progress" id="reelProgress"></div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -1598,7 +1884,148 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') openModal((currentIndex + 1) % poems.length);
 });
 
-// Build grid
+// ── REEL MODE ──
+const LIKES_KEY = 'ceci_likes_v1';
+
+function getLikes() {
+  try { return JSON.parse(localStorage.getItem(LIKES_KEY)) || {}; } catch { return {}; }
+}
+function saveLike(id, count) {
+  const likes = getLikes();
+  likes[id] = count;
+  localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
+}
+
+function buildReel() {
+  const container = document.getElementById('reelSlides');
+  const progress = document.getElementById('reelProgress');
+  const likes = getLikes();
+
+  poems.forEach((poem, i) => {
+    // Slide
+    const slide = document.createElement('div');
+    slide.className = 'reel-slide';
+    slide.dataset.index = i;
+
+    const likeCount = likes[poem.id] || 0;
+    const isLiked = likeCount > 0;
+
+    // First 5 lines as excerpt
+    const lines = poem.body.trim().split('\n').slice(0, 5).join('\n');
+
+    slide.innerHTML = `
+      <div class="reel-bg" style="background-image:url('public/images/${poem.id}.jpg')"></div>
+      <div class="reel-slide-content">
+        <div class="reel-poem-area">
+          <h2 class="reel-poem-title">${poem.title}</h2>
+          <p class="reel-poem-excerpt" id="excerpt-${i}">${lines.replace(/\n/g, '<br>')}</p>
+          <button class="reel-more-btn" id="moreBtn-${i}">leer más ↓</button>
+        </div>
+        <div class="reel-actions">
+          <button class="reel-action-btn ${isLiked ? 'liked' : ''}" id="likeBtn-${i}" data-id="${poem.id}" data-index="${i}">
+            <span class="icon">${isLiked ? '❤️' : '🤍'}</span>
+            <span class="label" id="likeCount-${i}">${likeCount > 0 ? likeCount : ''}</span>
+          </button>
+          <button class="reel-action-btn" onclick="openModal(${i}); closeReel();">
+            <span class="icon" style="font-size:1.1rem">📖</span>
+            <span class="label">leer</span>
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(slide);
+
+    // Dot
+    const dot = document.createElement('div');
+    dot.className = 'reel-dot' + (i === 0 ? ' active' : '');
+    progress.appendChild(dot);
+
+    // Like button
+    slide.querySelector(`#likeBtn-${i}`).addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const id = btn.dataset.id;
+      const idx = parseInt(btn.dataset.index);
+      const currentLikes = getLikes();
+      const wasLiked = btn.classList.contains('liked');
+      const newCount = wasLiked ? Math.max(0, (currentLikes[id] || 0) - 1) : (currentLikes[id] || 0) + 1;
+      
+      btn.classList.toggle('liked', !wasLiked);
+      btn.querySelector('.icon').textContent = wasLiked ? '🤍' : '❤️';
+      btn.querySelector('.label').textContent = newCount > 0 ? newCount : '';
+      saveLike(id, newCount);
+    });
+
+    // More button
+    slide.querySelector(`#moreBtn-${i}`).addEventListener('click', (e) => {
+      const excerpt = slide.querySelector(`#excerpt-${i}`);
+      const btn = e.target;
+      if (excerpt.classList.contains('expanded')) {
+        excerpt.classList.remove('expanded');
+        btn.textContent = 'leer más ↓';
+      } else {
+        excerpt.classList.add('expanded');
+        excerpt.innerHTML = poem.body.replace(/\n/g, '<br>');
+        btn.textContent = 'cerrar ↑';
+      }
+    });
+  });
+
+  // Intersection observer to update header on scroll
+  const headerTitle = document.getElementById('reelTitleTop');
+  const counter = document.getElementById('reelCounter');
+  const dots = document.querySelectorAll('.reel-dot');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        const idx = parseInt(entry.target.dataset.index);
+        headerTitle.textContent = poems[idx].title;
+        counter.textContent = `${idx + 1} / ${poems.length}`;
+        dots.forEach((d, di) => d.classList.toggle('active', di === idx));
+        entry.target.classList.add('active');
+      } else {
+        entry.target.classList.remove('active');
+      }
+    });
+  }, { root: container, threshold: 0.5 });
+
+  container.querySelectorAll('.reel-slide').forEach(s => observer.observe(s));
+}
+
+let reelBuilt = false;
+
+function openReel(startIndex = 0) {
+  if (!reelBuilt) { buildReel(); reelBuilt = true; }
+  document.getElementById('reelOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  
+  // Scroll to the right slide
+  setTimeout(() => {
+    const slides = document.querySelectorAll('.reel-slide');
+    if (slides[startIndex]) {
+      slides[startIndex].scrollIntoView({ behavior: 'instant' });
+    }
+    // Init header
+    document.getElementById('reelTitleTop').textContent = poems[startIndex].title;
+    document.getElementById('reelCounter').textContent = `${startIndex + 1} / ${poems.length}`;
+  }, 50);
+}
+
+function closeReel() {
+  document.getElementById('reelOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('openReelBtn').addEventListener('click', () => openReel(0));
+document.getElementById('reelClose').addEventListener('click', closeReel);
+
+// Keyboard nav in reel
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('reelOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape') closeReel();
+});
+
+// ── BUILD GRID ──
 const grid = document.getElementById('poemsGrid');
 poems.forEach((poem, index) => {
   const card = document.createElement('div');
