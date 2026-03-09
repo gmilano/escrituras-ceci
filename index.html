@@ -408,6 +408,80 @@
       color: var(--accent);
     }
 
+    /* ── AUDIO PLAYER ── */
+    .audio-player {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .audio-play-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+      color: #0e0e0f;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .audio-play-btn:hover { background: #e0bc7f; }
+    .audio-play-btn:active { transform: scale(0.92); }
+
+    .audio-progress-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 0;
+    }
+
+    .audio-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .audio-bar-track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .audio-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s linear;
+      pointer-events: none;
+    }
+
+    .audio-time {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* ── REEL BTN in hero ── */
     .hero-actions {
       display: flex;
@@ -868,6 +942,16 @@
       <p class="modal-poem-number" id="modalNumber"></p>
       <h2 class="modal-poem-title" id="modalTitle"></h2>
       <pre class="modal-poem-body" id="modalBody"></pre>
+      <div class="audio-player">
+        <button class="audio-play-btn" id="audioPlayBtn">▶</button>
+        <div class="audio-progress-wrap">
+          <p class="audio-label">escuchar — voz nova</p>
+          <div class="audio-bar-track" id="audioTrack">
+            <div class="audio-bar-fill" id="audioFill"></div>
+          </div>
+          <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+        </div>
+      </div>
       <div class="modal-nav">
         <button id="prevBtn">← anterior</button>
         <button id="nextBtn">siguiente →</button>
@@ -1962,6 +2046,56 @@ ya estaba roto`
 
 let currentIndex = 0;
 
+// ── AUDIO PLAYER ──
+const globalAudio = new Audio();
+let audioLoaded = false;
+
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  return `${m}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+}
+
+function loadAudio(poemId) {
+  globalAudio.pause();
+  globalAudio.src = `public/audio/${poemId}.mp3`;
+  globalAudio.load();
+  audioLoaded = true;
+  document.getElementById('audioPlayBtn').textContent = '▶';
+  document.getElementById('audioFill').style.width = '0%';
+  document.getElementById('audioTime').textContent = '0:00 / 0:00';
+}
+
+globalAudio.addEventListener('timeupdate', () => {
+  if (!globalAudio.duration) return;
+  const pct = (globalAudio.currentTime / globalAudio.duration) * 100;
+  document.getElementById('audioFill').style.width = `${pct}%`;
+  document.getElementById('audioTime').textContent =
+    `${fmtTime(globalAudio.currentTime)} / ${fmtTime(globalAudio.duration)}`;
+});
+
+globalAudio.addEventListener('ended', () => {
+  document.getElementById('audioPlayBtn').textContent = '▶';
+  document.getElementById('audioFill').style.width = '0%';
+});
+
+document.getElementById('audioPlayBtn').addEventListener('click', () => {
+  if (globalAudio.paused) {
+    globalAudio.play();
+    document.getElementById('audioPlayBtn').textContent = '⏸';
+  } else {
+    globalAudio.pause();
+    document.getElementById('audioPlayBtn').textContent = '▶';
+  }
+});
+
+document.getElementById('audioTrack').addEventListener('click', (e) => {
+  if (!globalAudio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  globalAudio.currentTime = pct * globalAudio.duration;
+});
+
 function openModal(index) {
   currentIndex = index;
   const poem = poems[index];
@@ -1972,11 +2106,13 @@ function openModal(index) {
   document.getElementById('modalBody').textContent = poem.body;
   document.getElementById('modalBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Scroll modal content to top
   document.querySelector('.modal-content').scrollTop = 0;
+  loadAudio(poem.id);
 }
 
 function closeModal() {
+  globalAudio.pause();
+  document.getElementById('audioPlayBtn').textContent = '▶';
   document.getElementById('modalBackdrop').classList.remove('open');
   document.body.style.overflow = '';
 }
