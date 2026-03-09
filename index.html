@@ -47,13 +47,14 @@
 
     .hero-video {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      inset: -20%;
+      width: 140%;
+      height: 140%;
       object-fit: cover;
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 0;
+      will-change: transform;
     }
 
     .hero-video.loaded {
@@ -876,12 +877,47 @@
 </div>
 
 <script>
-// Hero video fade-in
+// Hero video fade-in + parallax
 const heroVideo = document.getElementById('heroVideo');
+const heroSection = document.querySelector('.hero');
+const heroContent = document.querySelectorAll('.hero > *:not(.hero-video)');
+
 if (heroVideo) {
   heroVideo.addEventListener('canplay', () => heroVideo.classList.add('loaded'));
   heroVideo.addEventListener('loadeddata', () => heroVideo.classList.add('loaded'));
 }
+
+// Parallax on scroll — smooth RAF loop
+let ticking = false;
+
+function updateParallax() {
+  const scrollY = window.scrollY;
+  const heroH = heroSection ? heroSection.offsetHeight : window.innerHeight;
+
+  if (scrollY <= heroH) {
+    const progress = scrollY / heroH; // 0 → 1
+
+    // Video moves up slower (parallax depth)
+    if (heroVideo) {
+      heroVideo.style.transform = `translateY(${scrollY * 0.45}px)`;
+    }
+
+    // Hero content: drift up + fade out
+    heroContent.forEach(el => {
+      el.style.transform = `translateY(${scrollY * 0.18}px)`;
+      el.style.opacity = Math.max(0, 1 - progress * 2.2);
+    });
+  }
+
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(updateParallax);
+    ticking = true;
+  }
+}, { passive: true });
 
 const poems = [
   {
