@@ -1,0 +1,11 @@
+{
+  "name": "escrituras-ceci",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate-images.js"
+  },
+  "dependencies": {
+    "openai": "^4.47.1"
+  }
+}

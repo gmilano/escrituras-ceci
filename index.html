@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escrituras — Ceci Milano</title>
+  <meta name="description" content="Poemas de Ceci Milano">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0f;
+      --surface: #161618;
+      --surface2: #1e1e21;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e0d5;
+      --text-muted: #8a8480;
+      --accent: #c9a96e;
+      --accent2: #8b6f47;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(201,169,110,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-ornament {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 2rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title span {
+      display: block;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.4em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4rem;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      margin: 0 auto;
+    }
+
+    .scroll-hint {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+    }
+
+    /* ── POEMS GRID ── */
+    .poems-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--text);
+    }
+
+    .poems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2px;
+    }
+
+    .poem-card {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--surface);
+    }
+
+    .poem-card:nth-child(3n+1) { aspect-ratio: 16/10; }
+    .poem-card:nth-child(3n+2) { aspect-ratio: 4/3; }
+    .poem-card:nth-child(3n) { aspect-ratio: 3/2; }
+
+    .poem-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s;
+      filter: brightness(0.75) saturate(0.9);
+    }
+
+    .poem-card:hover img {
+      transform: scale(1.05);
+      filter: brightness(0.85) saturate(1.05);
+    }
+
+    .poem-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem;
+      transition: background 0.3s;
+    }
+
+    .poem-card:hover .poem-card-overlay {
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .poem-number {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .poem-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .poem-preview {
+      font-size: 0.8rem;
+      color: rgba(232,224,213,0.55);
+      line-height: 1.5;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s, opacity 0.3s;
+      opacity: 0;
+      font-style: italic;
+    }
+
+    .poem-card:hover .poem-preview {
+      max-height: 80px;
+      opacity: 1;
+    }
+
+    .poem-card-read {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .poem-card:hover .poem-card-read {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+      backdrop-filter: blur(12px);
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 960px;
+      max-height: 90vh;
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transform: translateY(20px);
+      transition: transform 0.4s;
+      overflow: hidden;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-image-panel {
+      width: 45%;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-image-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent, rgba(22,22,24,0.3));
+    }
+
+    .modal-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 3rem 3rem 3rem 2.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .modal-content::-webkit-scrollbar { width: 4px; }
+    .modal-content::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .modal-poem-number {
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .modal-poem-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-poem-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: rgba(232,224,213,0.88);
+      white-space: pre-wrap;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      z-index: 10;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .modal-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .modal-nav button {
+      flex: 1;
+      padding: 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .modal-nav button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .footer-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .poems-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .modal {
+        flex-direction: column;
+        max-height: 95vh;
+        margin: 1rem;
+      }
+      .modal-image-panel {
+        width: 100%;
+        height: 220px;
+      }
+      .modal-content {
+        padding: 1.5rem;
+      }
+      .modal-image-panel::after {
+        background: linear-gradient(to bottom, transparent, rgba(22,22,24,0.4));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .poems-grid {
+        grid-template-columns: 1fr;
+      }
+      .poem-card { aspect-ratio: 16/9 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-ornament">una colección de poemas</p>
+  <h1 class="hero-title">
+    Escrituras
+    <span>Ceci</span>
+  </h1>
+  <p class="hero-subtitle">veintiún poemas</p>
+  <div class="hero-divider"></div>
+  <p class="scroll-hint">↓ leer</p>
+</section>
+
+<!-- POEMS GRID -->
+<section class="poems-section">
+  <div class="section-header">
+    <p class="section-label">los poemas</p>
+    <h2 class="section-title">cada uno, un mundo</h2>
+  </div>
+  <div class="poems-grid" id="poemsGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-title">Escrituras — Ceci</p>
+  <p>poesía</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <button class="modal-close" id="modalClose">✕</button>
+  <div class="modal">
+    <div class="modal-image-panel">
+      <img id="modalImg" src="" alt="">
+    </div>
+    <div class="modal-content">
+      <p class="modal-poem-number" id="modalNumber"></p>
+      <h2 class="modal-poem-title" id="modalTitle"></h2>
+      <pre class="modal-poem-body" id="modalBody"></pre>
+      <div class="modal-nav">
+        <button id="prevBtn">← anterior</button>
+        <button id="nextBtn">siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const poems = [
+  {
+    id: 'sin-forma',
+    title: 'SIN FORMA',
+    preview: 'hay cosas que se sienten / y no se pueden decir...',
+    body: `hay cosas que se sienten
+y no se pueden decir
+pero tampoco callar
+lo que nos pasa
+no se acomoda
+ni a mis ganas
+ni a tu calma
+se desliza entre lo posible
+y lo que nunca fue dicho
+como si el deseo bastara
+para inventar un camino
+yo no quiero más preguntas sin respuestas
+ni citas sueltas como excusas
+ni abrazos que duran menos
+que lo que tardo en necesitarte de nuevo
+me encantaría quedarme
+pero no sé cómo hacerlo
+sin dejarme partes en el intento
+y vos
+tan sereno
+tan ahí
+tan lejos
+te pienso con ternura
+pero ya no con certeza
+y me duele
+porque querer tanto
+no alcanza`
+  },
+  {
+    id: 'siempre-ahora',
+    title: 'SIEMPRE AHORA',
+    preview: 'Nos entendemos en silencios, / con esa certeza tácita...',
+    body: `Nos entendemos en silencios,
+con esa certeza tácita de que
+la eternidad no es nuestra.
+Nos reímos de las preguntas
+que otros se harían,
+porque sabemos que,
+si nos miramos demasiado,
+se disuelven las palabras.
+Preferimos bailar entre las horas,
+como si el tiempo se anudara solo en nuestro abrazo,
+como si nadie más existiera
+en esa habitación inventada.
+Lo que tenemos es un pacto sin promesas,
+un refugio momentáneo
+donde no importa el después,
+ni la diferencia de calendarios,
+ni la imposibilidad de coincidir
+más allá de estas noches.
+Sabemos que estamos hechos de un mismo fuego,
+pero que el fuego,
+también,
+quema.
+Así que preferimos rozarnos sin atarnos,
+perdernos sin buscarnos,
+ser dos llamas en un cuarto oscuro
+que solo brillan cuando se encuentran.
+A veces, en medio de un beso,
+siento la urgencia de preguntarte,
+de armar con palabras
+eso que nunca nombramos.
+Pero me callo.
+Porque sé que si abro la boca,
+la razón va a meterse entre nosotros,
+va a querer entender
+lo que solo el cuerpo explica.
+De vez en cuando me pregunto
+si este juego tiene un final o si ya terminó
+y nosotros seguimos danzando
+como si nada importara.
+Pero entonces tus manos me buscan,
+y yo me rindo,
+sin cuestionar nada,
+sin pensar más allá de este instante.
+Y cuando te vas,
+no me pregunto nada.
+
+Solo sé que volvés,
+como si el presente fuera el único lugar
+donde nos encontramos de verdad.`
+  },
+  {
+    id: 'familia',
+    title: 'Familia',
+    preview: 'llegué a la mesa vacía de ganas...',
+    body: `llegué a la mesa vacía de ganas
+con esa duda tonta
+de si el amor era para mí
+los cubiertos chocaban suave
+había migas de pan
+luces amarillas, otras blancas
+y voces que ya conocía de memoria
+alguien preguntó cómo estaba
+otro me sirvió más papas
+se cruzaron chistes viejos
+ojos que me miraban como si nada doliera
+respiré sonrisas
+me abrazaron risas de un calor conocido
+y en ese ruido tranquilo
+se me aflojaron las espinas
+entendí despacio
+entre platos usados y vasos sudados
+que lo que yo llamaba vacío
+hace rato se sentaba conmigo
+que quizás no falte amor
+sino ojos
+para verlo donde siempre estuvo
+llenándome el plato
+y el pecho`
+  },
+  {
+    id: 'las-agujas-siguieron',
+    title: 'Las agujas siguieron',
+    preview: 'Nuevamente sonó ese viejo reloj...',
+    body: `Nuevamente sonó ese viejo reloj,
+quejoso marcó
+el día, la hora, el segundo,
+y egocéntrico me miró.
+
+Prefería yo mirarte, pero
+estabas teñida de él,
+se adueñó de vos.
+Es que aunque jugamos a desarmarlo
+y volver a acomodarlo,
+las agujas siguieron su paso.
+Y hoy solo te veo
+en esos retazos
+y tiempos escasos.
+Después de un intercambio, accedió,
+movió sus agujas a mi antojo,
+pero burlón susurró
+que la rosa perdió su color.`
+  },
+  {
+    id: 'homicidio-culposo',
+    title: 'HOMICIDIO CULPOSO',
+    preview: '"Viniste a desarmarme, / a romperme a besos..."',
+    body: `"Viniste a desarmarme,
+a romperme a besos,
+a cortarme a latidos sincronizados
+y sin necesidad alguna,"
+me dijiste y te fuiste.
+Te fuiste porque te elegías,
+capaz por primera vez,
+a vos antes que a esos veinte minutos
+de piel ardiendo
+y esas posteriores veinte horas
+de mi indiferencia absoluta.
+Destruí lo que me unió a esto,
+es que era perfecto pero yo,
+yo no podía.
+Necesitaba sentirnos libres
+y te encarcelé
+de la forma más cruel
+que pude
+y que me dejaste.
+Es que vos querías,
+pero debí entender que no era así,
+que solo no sabías irte
+y yo usaba nuestro desorden
+para ordenarme.
+
+Te fuiste cuando estabas sangrando,
+intentaste irte ileso y acompañado,
+pero terminaste en ruinas
+y sin rumbo alguno.
+"No me lo merecía,"
+dijiste.
+Te agarré tan fuerte como pude la mano,
+porque responderte sería,
+una vez más,
+buscarle la vuelta para acomodarme,
+desordenándote.
+No lo merecías,
+pero yo no pude.
+Y capaz lo necesitabas,
+y también capaz es,
+devuelta,
+ponerme primero afirmar eso.
+Te juro que intenté empujarte,
+echarte,
+y tampoco pude.
+No podía tenerte,
+no podía elegirte.
+Es que necesitaba que te vayas,
+pero que vuelvas
+cuando me quemaba el frío,
+y esa culpa.
+Pero capaz que fui esa tormenta,
+que, cambiando la literatura,
+anuncia,
+al fin,
+tu calma.
+Te vi romperte,
+llorarme,
+pedirme,
+esperarme,
+pero amor,
+no podía.
+Fui yo antes,
+esa víctima que se convierte en victimario
+
+y se justifica con eso,
+y ahora lo entiendo.
+Capaz se acercó a la muerte mi paso por tu camino,
+y ni siquiera ese perdón,
+casi susurrado que te dije,
+va a devolverte igual.
+Pero también capaz fue eso
+lo más lindo
+de mi homicidio culposo.`
+  },
+  {
+    id: 'el-saqueo',
+    title: 'EL SAQUEO: carta al cáncer',
+    preview: 'Me la robaste, / incluso mucho antes...',
+    body: `Me la robaste,
+incluso mucho antes
+de que lo pudiera notar.
+Saqueaste el último bloque sólido
+que aún sostenía a mi roble más fuerte.
+Me la sacaste,
+jugaste silenciosamente
+a esa jugada
+que nadie te podría ganar nunca.
+Y lo sabías.
+Sabías que jugaba con desventaja
+y lo hiciste igual.
+Nos miraste soberbiamente
+más de una vez,
+observaste mi llanto desconsolado
+agarrada de su mano,
+y te la llevaste igual.
+Hiciste tu danza mortal,
+de a poco, callada,
+y aparentemente amigable
+pintaste de negro
+cada parte de su carne.
+Cuando compraste ilícitamente
+tu primer hogar en su interior,
+nunca tuviste intenciones de irte,
+aunque jugabas a que sí.
+Poco a poco te la ibas llevando
+y cuando te logré ver,
+y lloré,
+y grité,
+y de rodillas te pedí que pares,
+te reíste,
+y te quedaste.
+Para qué,
+si te ibas a ir con ella.
+Por qué desprenderla de mis brazos
+si tu fin estaba en el suyo.
+Tu maldad era tan gigante
+como tu lugar en su cuerpo.
+Así que fuiste de a poco
+y me hiciste ver su final
+desde tu aparente principio.
+La apagaste,
+y le robaste
+tantas, tantas horas,
+tantas sonrisas,
+para darle
+ardor,
+molestia,
+angustia.
+Pero no estabas contento,
+así que
+primero su andar,
+luego su voz.
+Y ese día,
+y otros tantos
+en los que te odié más que al diablo,
+en los que me viste desfilar
+inquieta por ese cuarto
+sabiendo que te la llevabas,
+me apagaste la luz
+sacándome sus ojos.
+
+Pero igual estuviste ahí,
+para comerle hasta la paz,
+para no dejarla ni descansar.
+Necesitabas más
+y yo solo quería
+que no existieras,
+aunque eso implicara
+que ella tampoco.
+Tuve que soltarla
+porque dejártela
+sería odiarla,
+y solo te odio a vos.
+Yo no la tengo más,
+pero vos tampoco.
+Ya no se ríe de mis chistes,
+pero no llora por tus escombros.
+Tuviste meses de su vida,
+yo dieciocho años.`
+  },
+  {
+    id: 'si',
+    title: 'Si',
+    preview: 'Si yo nunca iba, / si vos nunca venías...',
+    body: `Si yo nunca iba,
+si vos nunca venías.
+Si esas eternas despedidas
+lo hubieran sido.
+Es que nos despedíamos sin despedirnos,
+para irnos sin despedirnos,
+y hasta con una sonrisa.
+Si solo hubieras escuchado,
+o yo hubiese hablado.
+Si vos querías cuando yo,
+o yo quería cuando vos.
+Si tan solo no hubieran habido haberes,
+y ese día te lo decía,
+o esa noche vos venías,
+y esa tarde lo admitía.
+
+Si estabas acá o yo allá,
+y me abrazabas,
+y yo te miraba.
+Si tu antes no era aquel,
+o si mi ayer se pareciera a tu hoy.
+Si no fuera "si" sino "ser",
+y si me daba cuenta
+que no era grave.
+Es que, al fin y al cabo,
+tenés veintipocos,
+tengo diecitantos.
+¿Qué más puede necesitar ser
+de lo que ya no es?
+Pero si—
+Nada.
+Y no es.
+Porque no era el fin ser.
+El fin fue esto y un desvelo.
+Porque si era,
+o si sí,
+o si todo y si nada,
+capaz esta carta
+no la impulsaba tu mirada.`
+  },
+  {
+    id: 'tal-vez-te-escribo',
+    title: 'TAL VEZ TE ESCRIBO',
+    preview: 'Tal vez te escribo / solo porque, / así al fin, / te puedo sentir mío...',
+    body: `Tal vez te escribo
+solo porque,
+así al fin,
+te puedo sentir mío.
+No solo el sentirte de mi propiedad,
+también, a veces,
+me gusta el amargo de tu ausencia,
+porque es tuya.
+Tal vez te escribo
+porque así, en letras,
+es la única metamorfosis aceptada
+de tu ligero paso
+y mi brutal apego.
+
+No solo cambiaría nuestra forma
+nunca formada,
+también podría admitir que,
+dos por tres
+o mil por cien,
+necesito desgarrarme el alma
+para sentir que todavía estamos.
+Tal vez te escribo
+porque así, en prosa o poesía,
+logro aún ver tu danza
+por mis tierras.
+No solo verte me clama,
+también es cierto que
+hoy y ayer,
+también mañana y pasado,
+pensé en vos
+y merecías aquella canción.
+Tal vez te escribo
+porque si un día nos ató el amor,
+quizás hoy ata el dolor,
+pero atados,
+en la misma dirección.`
+  },
+  {
+    id: 'somos',
+    title: 'SOMOS',
+    preview: 'Capaz yo soy vos / y vos sos eso...',
+    body: `Capaz yo soy vos
+y vos sos eso,
+eso que me despeina a mí
+y a ese árbol.
+Ayer también te vi en el mar.
+Puede ser que seamos,
+pero
+ya encontramos mil maneras
+de jugar a dividirnos.
+Hoy noté que tu brillo
+era igual que el sol,
+pero
+él es sol
+y vos sos vos.
+Cuando canto,
+a veces esa mariposa me observa.
+
+Ella tiene colores
+y yo distinta piel.
+Ella es mariposa
+y yo soy otra cosa.
+Tantas, tantas veces
+no le dije hola.
+Es que esa señora
+no es parte de mis horas.
+Me resigné a la idea
+de que somos.
+El mundo mismo
+dividió sus verdes,
+sus mares,
+sus ríos.
+Un día recité
+en el salón número tres:
+yo, tú, él,
+nosotros, vosotros y ellos.
+No me acuerdo por qué,
+y hoy ya no sé
+cuál es quién.
+Dijeron en la NASA que,
+visto desde afuera,
+capaz que sí somos.
+Me daría hasta terror
+saber que si soy y sos,
+y él es y yo soy un somos,
+entonces
+no me amé ni ayer ni hoy.
+No vi mi belleza en esa flor,
+ni te vi en mí cuando sopló
+el viento que la (o nos) despeinó.
+La verdad es dada,
+pero necesito saber
+cómo explico
+en un mundo tan estricto
+que yo soy vos y él,
+ayer, hoy,
+y hasta que esa mariposa
+sea él y yo también.`
+  },
+  {
+    id: 'la-estrella-fugaz',
+    title: 'LA ESTRELLA FUGAZ',
+    preview: 'Una estrella fugaz vino a contarme / su indignación...',
+    body: `Una estrella fugaz vino a contarme
+su indignación con nuestra parte:
+"¿Cómo, por ser fugaces,
+sus deseos debo concretarles?
+¿Qué acaso no se dan cuenta?" decía al gritarme
+"Que ser fugaces
+refleja lo principal del mensaje."
+¡Estrella, no te entiendo!
+Le grité cuando se iba.
+"Chica,
+el paso en que voy
+refleja tu vida."
+Triste estaba yo,
+ya se había ido,
+y todavía no había entendido
+su paso por mi camino.
+Allá se acercó su hermana,
+muy contenta y apurada.
+Me dijo:
+"Mi hermana aún sigue enfadada.
+¿Cómo puede ser que los humanos,
+a nosotros vengan a rogarnos,
+si aún no tienen claro
+ni su efímero paso?"
+¡Estrellita, no te vayas!
+Sé más clara, por favor.
+"Chica,
+¿quién le pide deseos
+a su peor temor?"`
+  },
+  {
+    id: 'era-amor',
+    title: 'ERA AMOR',
+    preview: 'Todos decían celos, / posesión. / Tranquilo que sé, / solo era amor...',
+    body: `Todos decían celos,
+posesión.
+Tranquilo que sé,
+solo era amor.
+No fueron graves
+los ardientes insomnios,
+pude apreciar mil noches
+gracias a tu enojo.
+Las marcas que tanto decían
+solo eran tu arte en mi piel.
+Un poco dolían,
+pero cómo no aceptar
+tu amor en mi terrenal ser.
+Debí callarme esas tres veces.
+Luego lo entendí.
+Vi lo más oscuro...
+qué lindo tu anochecer.
+Algún vómito me pude haber ahorrado
+si hubiese entendido que
+tu boca solo gritaba,
+no había de qué temer.
+Me querías hasta los huesos,
+capaz un poco más que eso.
+Me cuestionaba en exceso,
+pero en el último momento
+llegaba el perdón y el beso.
+Mis otros amores que no me amaban
+me decían que vos querías terminarme en vos.
+Escuché muy poco,
+ya estaban lejos de nuestro amor.
+Gracias, gracias
+por haber tenido esa precaución.
+También quisiera pedirte perdón.
+Quizás si el mundo pudiese no verme,
+hubieses estado mejor.
+Navegué los mares
+más oscuros,
+más salvajes,
+más tormentosos...
+todo era por amor.
+¿Por qué todos me arrancaron?
+Me obligaron,
+me arrastraron...
+tenías razón.
+El mundo está loco
+y vos tenés la receta justa del amor,
+ese que casi, casi, casi
+me hace entregarte la voz.`
+  },
+  {
+    id: 'el-dia-que-llegues',
+    title: 'EL DÍA QUE LLEGUES',
+    preview: 'La tormenta de ayer está calma hoy...',
+    body: `La tormenta de ayer está calma hoy.
+El día que llegues,
+aunque ayer dolió como hoy.
+El día que llegues,
+hoy soñé con vos.
+El día que llegues,
+hoy. Mañana no tiene sabor.
+El día que llegues,
+el pasado se hace presente hoy.
+El día que llegues,
+la mañana fue estúpida hoy.
+El día que llegues,
+tu reloj está preciso. Hoy.
+El día que llegues, hoy,
+recita este poema, amor.`
+  },
+  {
+    id: 'espejo',
+    title: 'ESPEJO',
+    preview: 'no me enamoré / y ahora sé lo que se siente...',
+    body: `no me enamoré
+y ahora sé lo que se siente
+cuando del otro lado
+sí
+quise quererlo
+me juro que sí
+pero el cuerpo no respondía
+y no me animaba
+a no sentir
+entonces vino otro
+y me amé en su mirada
+me vi
+me creí
+me entregué
+y terminé
+del otro lado
+me rompí igual
+pero al revés
+y me dolió
+porque me vi en sus ojos
+cuando a mí
+no me veían
+me acordé de su forma
+de esperarme sin reclamos
+de cómo
+yo callaba
+porque decir "no me pasa"
+también es violencia
+aunque no suene fuerte
+y ahora soy yo
+la que espera
+la que busca señales
+donde no hay idioma
+la que se pregunta
+si no fui suficiente
+y no sé si me castiga dios
+la vida
+o el amor que no supe dar
+pero lo entiendo
+
+me entiendo
+nos entiendo
+a los tres
+y eso duele
+porque ahora sé
+que no siempre se rompe
+por querer romper
+que a veces uno se va
+sin querer irse
+y otro se queda
+sin saber por qué
+que no me pasó
+y ahora me pasa
+pero con otro cuerpo
+y otra herida
+y no sé si pedir perdón
+o que me lo pidan
+si llorar por lo que hice
+o por lo que me hicieron
+solo sé
+que esto
+también
+es amar
+aunque no parezca`
+  },
+  {
+    id: 'siempre-ayer',
+    title: 'SIEMPRE AYER',
+    preview: 'un día me ardió la piel / no por el sol que entró en tu ventana...',
+    body: `un día me ardió la piel
+no por el sol que entró en tu ventana
+queriendo mostrarme que ayer ya pasó
+sino porque el fuego
+quemó
+llegó ese día
+el que nunca nombramos
+ese día en el que te abracé
+con la dulzura y el apego de quien tiene
+la profunda certeza
+de que es la última vez
+me vestí rápido
+te di ese beso, claro que sí
+pero vos no lo sabías, y yo sí
+te miré con el mismo amor, claro que sí
+
+pero intenté pegarme a cada parte de tu alma
+en ese último suspiro compartido
+vos no lo sabías, y yo sabía que así era
+y por primera vez jugué a ser vos
+y puse yo la condición
+aunque no la dije
+como solías hacer
+disfruté yo sola del sabor agridulce de esa despedida
+y me hundí en tus ideas
+te escuché
+te miré
+me reí
+te bailé
+me sacié de vos
+o eso creí
+llamé ridículas a aquellas preguntas
+que hoy me hacen despedirme
+me sumergí en la eternidad tan efímera
+que te regalaría mil veces
+pero ayer
+el calendario me recordaba qué día era
+y qué distancia nos separaba
+pero ya en tono tortuoso
+y mi mente lo escuchó
+ganó el mañana
+perdimos el siempre ahora
+pero siempre fuimos cuando teníamos que ser
+entonces
+aunque siempre fue ayer
+siempre es hoy`
+  },
+  {
+    id: 'te-extrano-por-los-dos',
+    title: 'TE EXTRAÑO POR LOS DOS',
+    preview: 'yo te extraño con el cuerpo / con las manos vacías...',
+    body: `yo te extraño con el cuerpo
+con las manos vacías
+con el hueco de tu risa
+colgado en mi almohada
+yo te extraño con rabia
+con ternura
+con dudas
+con ganas de escribirte
+solo para que no te olvides
+yo te extraño y me pregunto
+si vos también lo hacés
+o si solo me pensás
+cuando no tenés nada más que hacer
+y ahí duele más
+porque yo te lloré sin medir
+y vos te fuiste
+midiendo todo
+yo te extraño por los dos
+y me odio por seguir contando días
+y repitiendo conversaciones
+que no van a volver
+yo te extraño, sí
+pero ya no voy a rogar
+porque el amor no se pide:
+se queda
+y vos no
+pero, aun así,
+yo te extraño
+por los dos.`
+  },
+  {
+    id: 'un-ano-luz',
+    title: 'Un año luz: yaya',
+    preview: 'y hoy, / pero hace un año, / te apagaste para siempre...',
+    body: `y hoy,
+pero hace un año,
+te apagaste para siempre
+y yo me acuerdo de todo
+de esa flor insolente en la vereda
+del kiosquero diciéndome "buen día"
+como si no se hubiera muerto el mundo
+me acuerdo de los autos
+girando apurados por una ciudad
+que no sabía
+que vos ya no estabas
+me acuerdo de sentir
+que el sol se reía en mi cara
+que los árboles eran una burla
+que la vida seguía
+
+aunque yo no podía
+y vos menos
+el mundo
+tenía el descaro de seguir
+y yo quieta
+y vos más
+te despedí con la piel rota
+con los ojos rabiosos
+con ese llanto que desborda
+porque nunca me avisaron
+cómo se deja ir
+a alguien que fue raíz
+no sabía que el amor dolía así
+tan hueco
+tan lleno de imágenes
+que no van a volver
+nunca más tu voz llamando
+nunca más tus manos sirviendo pasta
+nunca más tus ojitos azules cielo
+espiándome la pena
+para darme abrigo sin decir nada
+y el mundo seguía igual
+y esa era la peor parte
+yo lloraba en las esquinas
+y la gente hablaba del mañana, del ayer
+grité
+le grité a dios
+que no me hable más
+que si eso era su plan
+no lo quería
+y hay días
+en los que te siento tan cerca
+como si me estuvieras tocando el pelo
+desde el otro lado del viento
+y otros
+en los que te busco en todo
+y no aparecés
+
+y duele
+duele más cuando me río fuerte
+y vos no estás para reírte conmigo
+duele en las cosas que no te puedo contar
+en los domingos sin tu voz
+en los abrazos que ya no existen
+y lloro
+como vos me enseñaste
+como cuando me decías "está bien llorar"
+y yo lloraba
+pero con vos al lado
+ahora lloro sola
+pero te siento
+en lo que falta
+en lo que duele
+en lo que no vuelve
+en lo que no se nombra sin temblar
+y aunque la vida siga
+aunque ría
+aunque ame
+hay un rincón mío
+que no se llena
+porque está lleno de vos
+y un año después
+sigo esperando
+que me contestes un mensaje
+que tu nombre se prenda en la pantalla
+que alguien me diga:
+"estaba todo bien, nunca se fue"
+pero no pasa
+y no pasa
+y no pasa
+así que me abrazo al dolor
+como a tu última remera
+y me dejo desgarrar
+porque cuando me duele
+todavía estás
+cuando arde
+sos real
+
+y aunque no estés
+aunque no vengas
+aunque no vuelva a verte
+yo
+todavía
+te amo
+como si no supiera
+que el costo de eso
+es extrañarte para siempre
+y contar años luz
+como si algún día
+esa cuenta eterna
+tuviera un fin.`
+  },
+  {
+    id: 'a-destiempo',
+    title: 'A DESTIEMPO',
+    preview: 'uno era refugio, / tenía el color exacto del hogar en invierno...',
+    body: `uno era refugio,
+tenía el color exacto del hogar en invierno.
+era fácil, cómodo,
+previsible.
+un lugar sin viento, pero sin fuego.
+el otro,
+tormenta.
+una grieta en la línea recta
+de todo lo que debía ser.
+me sacudió el alma
+como si el alma
+fuera suya.
+con uno,
+la vida me abría puertas.
+con el otro,
+yo las cerraba todas
+menos la suya.
+uno era el guía,
+el trazo perfecto,
+la opción sensata en la mesa de la vida.
+
+el otro,
+una mancha en el mantel
+que no quería limpiar.
+al primero le fallé sin quererlo.
+al segundo me entregué sin poder evitarlo.
+y a veces me pregunto
+qué parte del amor
+elige,
+y cuál
+se deja arrasar.`
+  },
+  {
+    id: 'como-si-supieras',
+    title: 'Como si supieras: a papá',
+    preview: 'hay formas de amar que no hacen ruido...',
+    body: `hay formas de amar que no hacen ruido,
+que no se escriben con flores
+ni se gritan en fotos.
+hay formas que se tejen despacito
+en los días normales,
+y vos sos todas ellas.
+sos la calma pero sin pausa,
+el genio que programa mundos
+pero nunca se olvida
+de la contraseña de mi corazón.
+te tengo adentro de mis logros,
+de mis risas,
+de cada "yo puedo"
+qué aprendí mirando cómo vos podías.
+sos esa voz que me sigue
+aunque no esté sonando,
+la que me dice que pruebe,
+que no me rinda,
+como si supieras
+que puedo volar
+aunque a veces me olvide.
+no hacés promesas,
+las cumplís.
+no hablás del amor,
+lo vivís.
+y si algún día me pierdo,
+me basta pensar en vos
+para encontrar el norte.
+
+porque mi brújula
+también tiene tus ojos,
+porque habiendo crecido con vos,
+es fácil encontrar siempre 
+el regreso a casa.`
+  },
+  {
+    id: 'agua-contra-fuego',
+    title: 'AGUA CONTRA FUEGO: lado B',
+    preview: 'una vez me ofrecieron abrigo / y no tuve frío...',
+    body: `una vez me ofrecieron abrigo
+y no tuve frío,
+me tendieron la cama
+y yo dormía en el suelo.
+me dijeron "quedate"
+pero yo ya me había ido
+sin moverme del lugar.
+otra vez,
+alguien me miró como si supiera
+qué parte exacta de mí
+dolía más en silencio
+no prometió nada
+pero temblé igual.
+el primero era raíz,
+cercanía,
+un idioma que entendía.
+el segundo,
+viento en idioma extranjero,
+pero igual me arrodillé
+a escuchar.
+quise quedarme donde era fácil,
+pero el cuerpo corría.
+me habría gustado
+que el amor supiera de mapas,
+de edades,
+de horarios.
+pero no.
+era marea.
+y acá estoy,
+
+sabiendo
+que hay abrazos que no me alcanzaron
+aunque tenían todo para hacerlo.
+y otros
+que me desarmaron
+aunque no sabían
+ni sostenerme.`
+  },
+  {
+    id: 'incomodo-cafe',
+    title: 'Incómodo café',
+    preview: 'no tomé el café, solo nos vi en el reflejo...',
+    body: `no tomé el café, solo nos vi en el reflejo
+se enfriaba, pero más me dolía
+ver tan lejos lo que me abrazaba todavía
+"y si fue a destiempo nunca fue"
+dijo alguien que dice saberlo todo
+y capaz, cuando tembló la idea de que fuimos,
+me enojé y tiré el café
+ya estaba frío
+me había pasado mirándonos en el reflejo
+habíamos sido, yo estuve ahí
+pero estábamos rodando en relojes opuestos
+jugando a encontrarnos
+grité mucho
+pero el silencio ganó igual
+si total era cierto
+pero no quiero volver a encontrarte
+quiero que sea ahora
+y si fue a destiempo y no fue
+entonces que no sea
+porque no vamos a ser
+lo que me hace arder hoy
+si tiene que ser, será
+pero que sea hoy
+ya todo está al revés
+ya me dolés
+y me calmas, todo junto
+
+pero nadie puede decir que no fue
+yo nos vi brillar, nos vi bailar
+yo nos vi creer que era
+aún con la certeza de que no era así
+apagué la tele
+no limpié el café
+ojalá llegues y que la mancha esté
+que se callen y que me des un beso
+si no, no era y no fue
+aunque te lleve en mi ser
+yo sé lo que vi
+y lo que vibró
+cuando nos encontramos
+en la mitad exacta del abismo.`
+  },
+  {
+    id: 'te-miro-y-no-te-encuentro',
+    title: 'Te miro y no te encuentro',
+    preview: 'te miro y no te encuentro / me escondo en la sombra de lo que fuimos...',
+    body: `te miro y no te encuentro
+me escondo en la sombra de lo que fuimos
+o de lo que quisimos ser
+es que vi tus ojos
+tan cerca de mí
+como gritándome
+que ya no me reconocen
+corrí, lloré, grité
+y seguías a mi lado
+pero
+cada vez más lejos
+nos perdimos y no te encuentro
+nos busco
+nos espero
+pero me duele
+me quema
+tanta distancia
+te dolió
+me dolió
+te rompí
+nos rompí
+
+y ahora solo recuerdo
+cuando esos ojos
+me buscaban con fuego
+con certeza
+como quien sabe
+dónde está su hogar
+y ahora me mirás con miedo
+con cuidado
+con distancia
+y reflexión
+y lo entiendo
+pero
+quiero volver
+a aquella noche
+a aquella mirada
+en la que sentí
+que nada era finito
+que todo existía
+y ese todo éramos nosotros
+corazón con corazón
+y sin necesitar nada más que los ojos
+estuve presente
+cuando nos convertimos en uno
+y cuando ese uno
+ya estaba roto`
+  }
+];
+
+let currentIndex = 0;
+
+function openModal(index) {
+  currentIndex = index;
+  const poem = poems[index];
+  document.getElementById('modalImg').src = `public/images/${poem.id}.jpg`;
+  document.getElementById('modalImg').alt = poem.title;
+  document.getElementById('modalNumber').textContent = `${String(index + 1).padStart(2, '0')} / ${poems.length}`;
+  document.getElementById('modalTitle').textContent = poem.title;
+  document.getElementById('modalBody').textContent = poem.body;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Scroll modal content to top
+  document.querySelector('.modal-content').scrollTop = 0;
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modalBackdrop')) closeModal();
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  openModal((currentIndex - 1 + poems.length) % poems.length);
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  openModal((currentIndex + 1) % poems.length);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowLeft') openModal((currentIndex - 1 + poems.length) % poems.length);
+  if (e.key === 'ArrowRight') openModal((currentIndex + 1) % poems.length);
+});
+
+// Build grid
+const grid = document.getElementById('poemsGrid');
+poems.forEach((poem, index) => {
+  const card = document.createElement('div');
+  card.className = 'poem-card';
+  card.innerHTML = `
+    <img src="public/images/${poem.id}.jpg" alt="${poem.title}" loading="lazy">
+    <div class="poem-card-overlay">
+      <p class="poem-number">${String(index + 1).padStart(2, '0')}</p>
+      <h3 class="poem-card-title">${poem.title}</h3>
+      <p class="poem-preview">${poem.preview}</p>
+      <p class="poem-card-read">leer poema →</p>
+    </div>
+  `;
+  card.addEventListener('click', () => openModal(index));
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
