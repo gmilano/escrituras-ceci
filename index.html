@@ -706,20 +706,99 @@
       .poems-grid {
         grid-template-columns: 1fr 1fr;
       }
+
+      /* Modal full-screen mobile */
+      .modal-backdrop {
+        align-items: flex-end;
+      }
+
       .modal {
         flex-direction: column;
-        max-height: 95vh;
-        margin: 1rem;
-      }
-      .modal-image-panel {
         width: 100%;
-        height: 220px;
+        max-width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        margin: 0;
+        border: none;
+        position: relative;
+        overflow: hidden;
       }
-      .modal-content {
-        padding: 1.5rem;
+
+      /* Image as full background */
+      .modal-image-panel {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
       }
+
+      .modal-image-panel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.35) saturate(0.8);
+      }
+
       .modal-image-panel::after {
-        background: linear-gradient(to bottom, transparent, rgba(22,22,24,0.4));
+        background: linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.4) 0%,
+          rgba(0,0,0,0.1) 30%,
+          rgba(0,0,0,0.6) 65%,
+          rgba(0,0,0,0.92) 100%
+        );
+      }
+
+      /* Content scrolls over image */
+      .modal-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100dvh;
+        padding: 5rem 1.5rem 2rem 1.5rem;
+        overflow-y: auto;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-poem-number {
+        font-size: 0.7rem;
+        opacity: 0.6;
+      }
+
+      .modal-poem-title {
+        font-size: clamp(1.8rem, 7vw, 2.8rem);
+        color: #fff;
+        border-bottom-color: rgba(255,255,255,0.15);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+      }
+
+      .modal-poem-body {
+        color: rgba(255,255,255,0.88);
+        font-size: 1.25rem;
+        line-height: 2.1;
+        flex: 1;
+      }
+
+      .modal-nav button {
+        color: rgba(255,255,255,0.6);
+        border-color: rgba(255,255,255,0.15);
+      }
+
+      .modal-nav button:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .modal-close {
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
+        background: rgba(0,0,0,0.5);
+        border-color: rgba(255,255,255,0.2);
+        color: #fff;
       }
     }
 
